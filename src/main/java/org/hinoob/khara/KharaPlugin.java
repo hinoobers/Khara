@@ -12,7 +12,7 @@ public class KharaPlugin extends JavaPlugin {
     @Override
     public void onLoad() {
         PacketEvents.setAPI(SpigotPacketEventsBuilder.buildNoCache(this));
-        PacketEvents.getAPI().getSettings().bStats(true).debug(true);
+        PacketEvents.getAPI().getSettings().bStats(true);
         PacketEvents.getAPI().load();
 
         // Safe place to set our instance, before onEnable

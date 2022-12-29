@@ -6,7 +6,6 @@ import com.github.retrooper.packetevents.event.PacketSendEvent;
 import org.hinoob.khara.Khara;
 import org.hinoob.khara.data.KharaUser;
 import org.hinoob.khara.util.PacketValidator;
-import org.hinoob.khara.util.TrackerOption;
 
 public class PacketListener extends PacketListenerAbstract {
 
@@ -21,9 +20,9 @@ public class PacketListener extends PacketListenerAbstract {
             return;
         }
 
-        user.trackerContainer.execute(event, TrackerOption.BEFORE_CHECKS);
-        user.checkContainer.execute(event);
-        user.trackerContainer.execute(event, TrackerOption.AFTER_CHECKS);
+        user.trackerContainer.getAll().forEach(tracker -> tracker.handle(event));
+        user.checkContainer.getAll().forEach(check -> check.handle(event));
+        user.trackerContainer.getAll().forEach(tracker -> tracker.handlePost(event));
     }
 
     @Override
@@ -31,8 +30,8 @@ public class PacketListener extends PacketListenerAbstract {
         KharaUser user = Khara.getInstance().getDataManager().get(event.getUser());
         if(user == null) return; // Very first login packets
 
-        user.trackerContainer.execute(event, TrackerOption.BEFORE_CHECKS);
-        user.checkContainer.execute(event);
-        user.trackerContainer.execute(event, TrackerOption.AFTER_CHECKS);
+        user.trackerContainer.getAll().forEach(tracker -> tracker.handle(event));
+        user.checkContainer.getAll().forEach(check -> check.handle(event));
+        user.trackerContainer.getAll().forEach(tracker -> tracker.handlePost(event));
     }
 }

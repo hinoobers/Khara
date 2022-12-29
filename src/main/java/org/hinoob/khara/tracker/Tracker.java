@@ -3,7 +3,6 @@ package org.hinoob.khara.tracker;
 import com.github.retrooper.packetevents.event.PacketReceiveEvent;
 import com.github.retrooper.packetevents.event.PacketSendEvent;
 import org.hinoob.khara.data.KharaUser;
-import org.hinoob.khara.util.TrackerOption;
 
 public abstract class Tracker {
 
@@ -13,6 +12,8 @@ public abstract class Tracker {
         this.user = user;
     }
 
-    public abstract void handle(PacketReceiveEvent event, TrackerOption option);
-    public abstract void handle(PacketSendEvent event, TrackerOption option);
+    public abstract void handle(PacketReceiveEvent event);
+    public abstract void handle(PacketSendEvent event);
+    public abstract void handlePost(PacketReceiveEvent event);
+    public abstract void handlePost(PacketSendEvent event);
 }
