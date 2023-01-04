@@ -9,6 +9,7 @@ import org.hinoob.khara.check.CheckContainer;
 import org.hinoob.khara.tracker.TrackerContainer;
 import org.hinoob.khara.tracker.impl.FlyingTracker;
 import org.hinoob.khara.tracker.impl.TransactionTracker;
+import org.hinoob.khara.util.AABB;
 import org.hinoob.khara.util.KharaVector3d;
 import org.hinoob.khara.util.Rotation;
 import org.hinoob.khara.util.Teleport;
@@ -24,6 +25,7 @@ public class KharaUser {
 
     // Data
     @Getter private KharaVector3d position, lastPosition;
+    @Getter private AABB boundingBox;
     @Getter private Rotation rotation, lastRotation;
     @Getter @Setter private Teleport lastAcceptedTeleport = null;
     @Getter private boolean clientGround, lastClientGround, lastLastClientGround;
@@ -54,6 +56,8 @@ public class KharaUser {
     public void setPosition(double x, double y, double z){
         this.lastPosition = position;
         this.position = new KharaVector3d(x, y, z);
+
+        this.boundingBox = new AABB(lastPosition.getX() - 0.3F, lastPosition.getY(), lastPosition.getZ() - 0.3F, lastPosition.getX() + 0.3F, lastPosition.getY() + 1.8F, lastPosition.getZ() + 0.3F);
     }
 
     public void setRotation(float yaw, float pitch){
