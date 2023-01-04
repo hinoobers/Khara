@@ -31,6 +31,7 @@ public class FlyingTracker extends Tracker {
         WrapperPlayClientPlayerFlying wrapper = new WrapperPlayClientPlayerFlying(event);
         user.setOnGround(wrapper.isOnGround());
 
+        // Always the case when teleporting
         if(wrapper.hasPositionChanged() && wrapper.hasRotationChanged() && !wrapper.isOnGround()){
             checkTeleport(wrapper);
         }
