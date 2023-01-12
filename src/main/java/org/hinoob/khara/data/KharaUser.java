@@ -1,12 +1,15 @@
 package org.hinoob.khara.data;
 
+import com.github.retrooper.packetevents.protocol.chat.ChatTypes;
 import com.github.retrooper.packetevents.protocol.player.User;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerDisconnect;
 import lombok.Getter;
 import lombok.Setter;
 import net.kyori.adventure.text.Component;
 import org.hinoob.khara.check.CheckContainer;
+import org.hinoob.khara.check.impl.Hitbox;
 import org.hinoob.khara.tracker.TrackerContainer;
+import org.hinoob.khara.tracker.impl.EntityTracker;
 import org.hinoob.khara.tracker.impl.FlyingTracker;
 import org.hinoob.khara.tracker.impl.TransactionTracker;
 import org.hinoob.khara.util.AABB;
@@ -37,11 +40,18 @@ public class KharaUser {
     public void onLoad(){
         trackerContainer.register(new FlyingTracker(this));
         trackerContainer.register(new TransactionTracker(this));
+        trackerContainer.register(new EntityTracker(this));
+
+        checkContainer.register(new Hitbox(this));
     }
 
     public void disconnect(String message){
         user.sendPacket(new WrapperPlayServerDisconnect(Component.text(message)));
         user.closeConnection();
+    }
+
+    public void sendMessage(String message){
+        user.sendMessage(Component.text(message), ChatTypes.CHAT);
     }
 
     public void tick(){
