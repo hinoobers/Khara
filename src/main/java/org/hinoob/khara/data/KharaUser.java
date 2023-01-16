@@ -27,7 +27,7 @@ public class KharaUser {
     private int TICK = 0;
 
     // Data
-    @Getter private KharaVector3d position, lastPosition;
+    @Getter private KharaVector3d position = KharaVector3d.ZERO, lastPosition = KharaVector3d.ZERO;
     @Getter private AABB boundingBox;
     @Getter private Rotation rotation, lastRotation;
     @Getter @Setter private Teleport lastAcceptedTeleport = null;

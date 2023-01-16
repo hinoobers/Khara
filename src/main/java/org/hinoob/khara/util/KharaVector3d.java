@@ -10,6 +10,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class KharaVector3d {
 
+    public static KharaVector3d ZERO = new KharaVector3d(0, 0, 0);
+
     @Getter @Setter private double x, y, z;
 
     public KharaVector3d(double x, double y, double z){
