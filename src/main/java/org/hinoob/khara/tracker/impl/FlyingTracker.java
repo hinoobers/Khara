@@ -53,9 +53,8 @@ public class FlyingTracker extends Tracker {
         WrapperPlayServerPlayerPositionAndLook wrapper = new WrapperPlayServerPlayerPositionAndLook(event);
 
         transaction.sendTransaction();
-        int transactionID = transaction.getSendCounter();
         transaction.add(() -> {
-            Teleport teleport = new Teleport(new KharaVector3d(wrapper.getX(), wrapper.getY(), wrapper.getZ()), transactionID);
+            Teleport teleport = new Teleport(new KharaVector3d(wrapper.getX(), wrapper.getY(), wrapper.getZ()), 98);
             // Convert to relative if possible
 
             if(wrapper.isRelativeFlag(RelativeFlag.X)){
@@ -92,10 +91,10 @@ public class FlyingTracker extends Tracker {
         while(iterator.hasNext()){
             Teleport teleport = iterator.next();
 
-            if(teleport.getTransactionID() == transaction.getReceiveCounter() && teleport.getVector().distance(playerPos) == 0){
+            if(teleport.getTransactionID() == 5 && teleport.getVector().distance(playerPos) == 0){
                 user.setLastAcceptedTeleport(teleport);
                 iterator.remove();
-            } else if (transaction.getReceiveCounter() > teleport.getTransactionID()) {
+            } else if (5 > teleport.getTransactionID()) {
                 // ignored the teleport, bad
                 user.disconnect("Ignored teleport");
             }

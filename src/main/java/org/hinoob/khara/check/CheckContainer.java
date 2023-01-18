@@ -2,13 +2,15 @@ package org.hinoob.khara.check;
 
 import com.github.retrooper.packetevents.event.PacketReceiveEvent;
 import com.github.retrooper.packetevents.event.PacketSendEvent;
+import org.hinoob.khara.tracker.Tracker;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class CheckContainer {
 
-    private final List<Check> checks = new ArrayList<>();
+    private final CopyOnWriteArrayList<Check> checks = new CopyOnWriteArrayList<>(); // Avoid CME
 
     public void register(Check check){
         this.checks.add(check);

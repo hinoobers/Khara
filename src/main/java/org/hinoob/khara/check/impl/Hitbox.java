@@ -6,6 +6,7 @@ import com.github.retrooper.packetevents.protocol.packettype.PacketType;
 import com.github.retrooper.packetevents.protocol.world.BlockFace;
 import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientInteractEntity;
 import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientPlayerFlying;
+import net.kyori.adventure.text.Component;
 import org.bukkit.util.Vector;
 import org.hinoob.khara.check.Check;
 import org.hinoob.khara.data.KharaUser;
@@ -28,9 +29,11 @@ public class Hitbox extends Check {
         if(event.getPacketType() == PacketType.Play.Client.INTERACT_ENTITY){
             WrapperPlayClientInteractEntity wrapper = new WrapperPlayClientInteractEntity(event);
 
-            EntityTracker tracker = user.trackerContainer.getByClass(EntityTracker.class);
-            if(tracker.getByID(wrapper.getEntityId()) != null){
-                trackedEntity = tracker.getByID(wrapper.getEntityId());
+            if(wrapper.getAction() == WrapperPlayClientInteractEntity.InteractAction.ATTACK){
+                EntityTracker tracker = user.trackerContainer.getByClass(EntityTracker.class);
+                if(tracker.getByID(wrapper.getEntityId()) != null){
+                    trackedEntity = tracker.getByID(wrapper.getEntityId());
+                }
             }
         }else if(WrapperPlayClientPlayerFlying.isFlying(event.getPacketType())) {
             if(trackedEntity != null){
@@ -38,9 +41,12 @@ public class Hitbox extends Check {
 
                 for(float eyeHeight : new float[] {1.62F, 1.54F}) {
                     for(float yaw : new float[] {user.getRotation().getYaw(), user.getLastRotation().getYaw()}) {
-                        double distance = getDistance(eyeHeight, yaw);
-                        if(distance > 0 && distance < closestDistance){
-                            closestDistance = distance;
+                        for(float pitch : new float[] {user.getRotation().getPitch(), user.getLastRotation().getPitch()}) {
+                            double distance = getDistance(eyeHeight, yaw, pitch);
+                            if(distance == -1) continue;
+                            if(distance < closestDistance){
+                                closestDistance = distance;
+                            }
                         }
                     }
                 }
@@ -62,12 +68,12 @@ public class Hitbox extends Check {
 
     }
 
-    public double getDistance(float eyeHeight, float yaw) {
-        AABB bb = trackedEntity.getBBCloned().expand(0.1F);
+    public double getDistance(float eyeHeight, float yaw, float pitch) {
+        AABB bb = trackedEntity.getBoundingBox().copy().expand(0.1F);
 
         KharaVector3d eyePos = new KharaVector3d(user.getLastPosition().getX(), user.getLastPosition().getY() + eyeHeight, user.getLastPosition().getZ());
-        KharaVector3d lookPos = getVectorForRotation(user.getRotation().getPitch(), yaw);
-        KharaVector3d scaledEyeDir = eyePos.add(lookPos.getX() * 6, lookPos.getY() * 6, lookPos.getZ() * 6);
+        KharaVector3d lookDir = getVectorForRotation(pitch, yaw);
+        KharaVector3d scaledEyeDir = eyePos.addCopied(lookDir.getX() * 6, lookDir.getY() * 6, lookDir.getZ() * 6);
 
         Pair<KharaVector3d, BlockFace> intercept = bb.calculateIntercept(eyePos, scaledEyeDir);
         if(intercept == null) return -1;

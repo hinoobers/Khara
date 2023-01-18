@@ -21,8 +21,8 @@ public class PacketListener extends PacketListenerAbstract {
         }
 
         user.trackerContainer.getAll().forEach(tracker -> tracker.handle(event));
-        user.checkContainer.getAll().forEach(check -> check.handle(event));
-        user.trackerContainer.getAll().forEach(tracker -> tracker.handlePost(event));
+        user.checkContainer.getAll().forEach(check -> check.handle(event)); // CHECK CALLED HERE
+        user.trackerContainer.getAll().forEach(tracker -> tracker.handlePost(event)); // TRACKKE cALLED HERE
     }
 
     @Override

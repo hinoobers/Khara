@@ -57,10 +57,8 @@ public class KharaUser {
     public void tick(){
         ++TICK;
 
-        if(TICK % 10 == 0){
-            TransactionTracker transaction = trackerContainer.getByClass(TransactionTracker.class);
-            transaction.sendTransaction();
-        }
+        TransactionTracker transaction = trackerContainer.getByClass(TransactionTracker.class);
+        transaction.sendTransaction();
     }
 
     public void setPosition(double x, double y, double z){
